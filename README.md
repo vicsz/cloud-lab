@@ -377,9 +377,7 @@ Hint: CacheEvict annotation
 
 Note, the default cache implementation uses local in-memory caching, but this can be easily change to use 3rd party caching solutions such as Redis.
 
-### 8.1 - Add the Spring Boot Redis dependency to your build script.
-
-The full name of the dependency is : *org.springframework.boot:spring-boot-starter-data-redis*
+### 8.1 - Add the Spring Boot Redis and commons-pool dependencies to your build script.
 
 If using Gradle, your new dependency block should look like:
 
@@ -387,6 +385,7 @@ If using Gradle, your new dependency block should look like:
 dependencies {
 //...
 compile('org.springframework.boot:spring-boot-starter-data-redis')
+compile('org.apache.commons:commons-pool2:2.4.2')
 //...
 }
 ```
@@ -439,4 +438,6 @@ spring.cache.type=REDIS
 Verify that Caching works locally and in PCF.
 
 ## 9 - Data with Spring Boot
+
+
 ## 10 - Data on PCF
