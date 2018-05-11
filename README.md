@@ -375,5 +375,52 @@ Hint: CacheEvict annotation
 
 ## 8 - Caching on PCF
 
+Note, the default cache implementation uses local in-memory caching, but this can be easily change to use 3rd party caching solutions such as Redis.
+
+### 8.1 - Add the Spring Boot Redis dependency to your build script.
+
+The full name of the dependency is : *org.springframework.boot:spring-boot-starter-data-redis*
+
+If using Gradle, your new dependency block should look like:
+
+```groovy
+dependencies {
+//...
+compile('org.springframework.boot:spring-boot-starter-data-redis')
+//...
+}
+```
+
+Rebuild, and redeploy to PCF.
+
+### 8.2 - Create a Redis Service Instance in PCF
+
+You can view available self-self / on-demand provisioning services via the marketplace.
+
+```sh
+cf marketplace
+```
+
+To create a Redis Service run:
+
+```sh
+cf create-service p-redis shared-vm custom-redis
+```
+
+### 8.3 - Bind the Service to our application
+
+```sh
+cf bind-service cloud-lab custom-redis
+```
+
+Restage your app:
+```sh
+cf restage cloud-lab
+```
+
+Confirm connection to your Redis Server using the health endpoint: /actuator/health
+
+Also confirm that cache is still working.
+
 ## 9 - Data with Spring Boot
 ## 10 - Data on PCF
