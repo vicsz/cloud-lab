@@ -439,5 +439,94 @@ Verify that Caching works locally and in PCF.
 
 ## 9 - Data with Spring Boot
 
+### 9.1 - Add the Spring Boot Data JPA , Rest and H2Database dependencies to your build script.
+
+The full name of the dependencies are :
+*org.springframework.boot:spring-boot-starter-data-jpa*
+*org.springframework.boot:spring-boot-starter-data-rest*
+*com.h2database:h2*
+
+If using Gradle, your new dependency block should look like:
+
+```groovy
+dependencies {
+	//...
+	compile('org.springframework.boot:spring-boot-starter-data-rest')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('com.h2database:h2')
+	//...
+}
+```
+
+### 9.2 - Add a Simple Domain Object
+
+Such as a Person class:
+
+```java
+@Entity
+public class Person {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    private String firstName;
+    private String lastName;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+}
+
+```
+
+### 9.3 - Add a Repository Interface
+
+Also create a PersonRepository interface:
+
+```java
+public interface PersonRepository extends JpaRepository<Person, Long> {}
+
+```
+
+### 9.4  - Add Default Sample Data
+
+Create a import.sql file in the resources/ directory.
+
+```sql
+INSERT INTO PERSON(id, first_name, last_name) VALUES (1, 'Tony', 'Stark');
+INSERT INTO PERSON(id, first_name, last_name) VALUES (2, 'Steve', 'Rogers');
+
+```
+
+### 9.5 - Test the new persons endpoints
+
+Restart your app, and view the localhost:8080/persons.
+
+The default is configured to use the embedded H2 Database.
+
+
+## 9.6 - BONUS - Enable logging of all DML/DDL SQL statements
+
+Add the following to the *applications.properties* file.
+
+```properties
+spring.jpa.show-sql=true
+```
+
+Restart your app, you should now see all SQL statement in the log output.
+
 
 ## 10 - Data on PCF
