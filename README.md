@@ -189,9 +189,61 @@ Rebuild, and check the http://localhost:8080/actuator/info endpoint.
 Hint - you will need to init a GIT repot locally, and add the com.gorylenko.gradle-git-properties dependency in Gradle.
 
 ## 4 - Operations on PCF
-## 3 - Configuration with Spring Boot
-## 4 - Configuration on PCF
-## 5 - Caching with Spring Boot
-## 6 - Caching on PCF
-## 7 - Data with Spring Boot
-## 8 - Data on PCF
+### 4.1 - Add a /kill endpoint to your App and redeploy your App
+
+Add a new KillController to allow simulating of a JVM crash.
+
+```java
+@RestController
+public class KillController {
+
+  @RequestMapping("/kill")
+  public void kill(){
+      System.exit(1);
+  }
+}
+```
+
+Rebuild your app, and redeploy to PCF.
+
+```sh
+ ./gradlew build && cf push cloud-lab -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
+```
+### 4.2 - In separate terminal window TAIL the PCF app logs
+
+```sh
+cf logs cloud-lab
+```
+
+### 4.3 - Call the /kill endpoint
+
+Note that PCF will automatically bring up a new instance.
+
+This can be monitored from the PCF Dev Portal.
+
+You can also view what happened in the logging window from the previous step.
+
+### 4.4 - BONUS - Create a PCF manifest to simplify deployments
+
+https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html
+
+```sh
+cf create-app-manifest cloud-lab
+```
+
+You can customize deployment settings, as well as default binary path.
+
+### 4.5 - BONUS - Add Auto-Scaling to Your Application
+
+https://docs.run.pivotal.io/appsman-services/autoscaler/using-autoscaler.html
+
+From your Dev Space in the PCF Dev GUI , add an App-Scaler Server, bind it to your Application.
+
+It is configurable via the Manage button.
+
+## 5 - Configuration with Spring Boot
+## 6 - Configuration on PCF
+## 7 - Caching with Spring Boot
+## 8 - Caching on PCF
+## 9 - Data with Spring Boot
+## 10 - Data on PCF
