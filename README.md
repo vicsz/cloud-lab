@@ -294,6 +294,86 @@ Build and Redeploy to PCF.
 Verify the updated message at the /hello endpoint.
 
 ## 7 - Caching with Spring Boot
+
+### 7.1 - Add a slow / costly endpoint to the Application.
+
+One example would be performing converting a String to UpperCase.
+
+```java
+@RestController
+public class CacheExampleController {
+
+  @RequestMapping("/uppercase")
+  public String uppercase(String input ){
+      try {Thread.sleep(5000); } catch (InterruptedException e) {}
+
+      return input.toUpperCase();
+  }
+}
+```
+
+Rebuild, rerun the app.
+
+From the browser you can call : *http://localhost:8080/uppercase?input=test*
+
+Or using curl:
+
+```sh
+curl http://localhost:8080/uppercase?input=test
+```
+
+Note how the /uppercase endpoint is always slow.
+
+### 7.2 - Add the Spring Boot Cache dependency to your build script.
+
+The full name of the dependency is : *org.springframework.boot:spring-boot-starter-cache*
+
+If using Gradle, your new dependency block should look like:
+
+```groovy
+dependencies {
+//...
+compile('org.springframework.boot:spring-boot-starter-cache')
+//...
+}
+```
+
+### 7.3 - Enable Caching on the endpoint by using the Cache Annotation.
+
+Updated CacheExampleController should look like:
+
+```java
+@Cacheable("uppercase")
+@RequestMapping("/uppercase")
+public String uppercase(String input ){
+    try {Thread.sleep(5000); } catch (InterruptedException e) {}
+
+    return input.toUpperCase();
+}
+```
+
+You will also need to turn on Caching by adding the EnableCaching annotation to the CloudLabApplication class:
+
+```java
+@SpringBootApplication
+@EnableCaching
+public class CloudLabApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(CloudLabApplication.class, args);
+	}
+}
+```
+
+Restart your app, and verify that subsequent calls to the endpoint return much quicker.
+
+### 7.4 - BONUS - Add an eviction endpoint to the controller
+
+It will evict specified keys from the cache.
+
+Hint: CacheEvict annotation
+
 ## 8 - Caching on PCF
+
 ## 9 - Data with Spring Boot
 ## 10 - Data on PCF
