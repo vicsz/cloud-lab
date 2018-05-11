@@ -42,3 +42,7 @@ dependencyManagement {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }
+
+springBoot {
+	buildInfo()
+}

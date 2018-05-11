@@ -26,7 +26,7 @@ Stick to the default settings, however update:
 - select Gradle
 Download it, and unzip it.
 ### 0.2 - Import the project into your IDE.
-## 1 - WebApp
+## 1 - WebApplication with SpringBoot
 ### 1.1 - Implement a HelloWorld endpoint
 This can be done by creating a *HelloWorldController* Java class file with:
 
@@ -79,12 +79,119 @@ From the commandline you can run them with:
 ./gradlew test
 ```
 
-## 2 - WebApp on PCF
-## 3 - Operations
+## 2 - WebApplication on PCF
+### 2.1 - Login into the PCF instance that you are using if required
+
+```sh
+cf login -a ENTER_API_URL_HERE
+```
+
+Enter your Username and Password.
+### 2.2 - Deploy your application to PCF
+
+```sh
+cf push cloud-lab -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
+```
+
+### 2.3 - Login into the PCF portal.
+
+If you are using Pivotal Web Services, the portal is at:
+
+https://run.pivotal.io
+
+Click through to your app by selecting the default space and org.
+
+Your route to the application (URL) will be presented besides your application.
+
+### 2.4 - Test the /hello endpoint at this route <ROUTE>/hello
+
+### 2.5 - Scale the App
+
+Either provision more instances or more space.
+
+This can be done via the command line or via the GUI.
+
+To scale up to 2 instances:
+
+```sh
+cf scale cloud-lab -i 2
+```
+
+Via the GUI observe additional instances being spun up.
+
+## 3 - Operations with Spring Boot
+
+The Spring Actuator Dependency we added early includes out-of-the-box endpoint for monitoring and interacting with your application.
+
+### 3.1 - Check the localhost:8080/actuator/health endpoint
+
+Verify that it works on your local running instance of the app:
+
+```sh
+curl localhost:8080/actuator/health
+```
+
+You can also use a browser
+
+### 3.2 - Expose additional information on the Health Endpoint
+
+To the application.properties file in resources add:
+
+```properties
+management.endpoint.health.show-details=ALWAYS
+```
+
+Later on in the Workshop this endpoint will also show database information.
+
+### 3.3 - Check for new information on the health endpoint
+
+This will require running rebuilding the application:
+
+```sh
+./gradlew bootRun
+```
+
+```sh
+curl localhost:8080/actuator/health
+```
+
+
+### 3.4 - Enable ALL Actuator endpoints
+
+Currently exposed actuator endpoints can be viewed at: http://localhost:8080/actuator
+
+For security reasons, many of the these endpoints are turned off by default.
+
+They can be ALL enabled by adding the following to your application.properties file:
+
+```properties
+management.endpoints.web.exposure.include=*
+```
+
+Rebuild, and check the http://localhost:8080/actuator endpoint for available ones.
+
+### 3.5 - Add build information the /info endpoint
+
+We want to easily view build information from deployed artifacts.
+
+Add the following to your build.gradle:
+
+ ```groovy
+ springBoot {
+    buildInfo()
+ }
+ ```
+
+Rebuild, and check the http://localhost:8080/actuator/info endpoint.
+
+### 3.6 - BONUS - Add GIT Information to the /info endpoint
+
+Hint - you will need to init a GIT repot locally, and add the com.gorylenko.gradle-git-properties dependency in Gradle.
+
 ## 4 - Operations on PCF
-## 3 - Configuration
+## 3 - Configuration with Spring Boot
 ## 4 - Configuration on PCF
-## 5 - Caching
+## 5 - Caching with Spring Boot
 ## 6 - Caching on PCF
-## 7 - Data
+## 7 - Data with Spring Boot
 ## 8 - Data on PCF
