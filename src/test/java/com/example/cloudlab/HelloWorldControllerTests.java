@@ -20,6 +20,6 @@ public class HelloWorldControllerTests {
     public void testHelloWorld(){
         String body = restTemplate.getForObject("/hello",String.class);
 
-        assertThat(body).contains("Hola Mundo!");
+        assertThat(body).contains("Hello World - default config file");
     }
 }
