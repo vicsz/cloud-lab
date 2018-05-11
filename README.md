@@ -22,7 +22,7 @@ Access will be provided during the workshop, or you can sign up for a free acces
 ### 0.1 - Generate a Spring Boot Template from https://start.spring.io
 Stick to the default settings, however update:
 - artifact name to cloud-lab
-- for dependencies add Web, Actuator, Config Client
+- for dependencies add Web, Actuator
 - select Gradle
 Download it, and unzip it.
 ### 0.2 - Import the project into your IDE.
