@@ -422,5 +422,21 @@ Confirm connection to your Redis Server using the health endpoint: /actuator/hea
 
 Also confirm that cache is still working.
 
+### 8.4 - BONUS - Default to Simple (non-Redis caching locally) and Redis Caching in the cloud
+
+In application.properties add:
+
+```properties
+spring.cache.type=SIMPLE
+```
+
+In application-cloud.properties add:
+
+```properties
+spring.cache.type=REDIS
+```
+
+Verify that Caching works locally and in PCF.
+
 ## 9 - Data with Spring Boot
 ## 10 - Data on PCF
