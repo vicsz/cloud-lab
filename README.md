@@ -27,6 +27,58 @@ Stick to the default settings, however update:
 Download it, and unzip it.
 ### 0.2 - Import the project into your IDE.
 ## 1 - WebApp
+### 1.1 - Implement a HelloWorld endpoint
+This can be done by creating a *HelloWorldController* Java class file with:
+
+
+```java
+@RestController
+public class HelloWorldController {
+
+    @RequestMapping("hello")
+    public String helloWorld(){
+        return "Hola Mundo!";
+    }
+}
+### 1.2 - Run the application
+```sh
+./gradlew bootRun
+```
+### 1.3 - Test the /hello endpoint
+The address will be: localhost:8080/hello
+
+You can test via a browser or commandline:
+```sh
+curl localhost:8080/hello
+```
+### 1.4 - BONUS - Add Unit Tests for HelloWorld endpoint
+This can be done by creating a *HelloWorldControllerTests* Java class file in the test/java directory with:
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class HelloWorldControllerTests {
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+
+    @Test
+    public void testHelloWorld(){
+        String body = restTemplate.getForObject("/hello",String.class);
+
+        assertThat(body).contains("Hola Mundo!");
+    }
+}
+```
+
+With Intellij, you can now run the Test by right clicking on it.
+
+From the commandline you can run them with:
+
+```sh
+./gradlew test
+```
+
 ## 2 - WebApp on PCF
 ## 3 - Operations
 ## 4 - Operations on PCF
