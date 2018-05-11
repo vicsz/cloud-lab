@@ -242,6 +242,40 @@ From your Dev Space in the PCF Dev GUI , add an App-Scaler Server, bind it to yo
 It is configurable via the Manage button.
 
 ## 5 - Configuration with Spring Boot
+
+Spring Boot lets you externalize your configuration so that you can work with the same application code in different environments.
+
+https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html
+
+### 5.1 - Allow injection of the helloWorld message via external sources
+```java
+@RestController
+public class HelloWorldController {
+
+    @Value("${helloworld.message:'Hola Mundo - default!'}")
+    private String helloMessage;
+
+    @RequestMapping("hello")
+    public String helloWorld(){
+        return helloMessage;
+    }
+}
+```
+
+Note #1 : the usage of the default value in case nothing is found (optional).
+
+Note #2 : You may have to fix broken tests!!
+
+### 5.2 - Add a configurable value for helloworld.message in the application.properties file.
+
+```properties
+helloworld.message="Hello World - default config file"
+```
+
+### 5.3 - Rebuild / Restart your app, and verify the /hello endpoint.
+
+Default should be "Hello World - default config file"
+
 ## 6 - Configuration on PCF
 ## 7 - Caching with Spring Boot
 ## 8 - Caching on PCF
