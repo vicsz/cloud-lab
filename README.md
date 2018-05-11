@@ -292,26 +292,6 @@ helloworld.message="Hello World - cloud only"
 Build and Redeploy to PCF.
 
 Verify the updated message at the /hello endpoint.
-### 6.2 - Add a new Config Server Service in your developer space
-
-```sh
-cf create-service p-config-server standard custom-config-server -c '{"git": {"uri": "https://github.com/vicsz/configuration-server-config-repo" } }'
-```
-
-Note a Config Server will use a GIT repo for loading values from.
-
-### 6.3 - Bind the newly created Config Server Service to your application
-
-```sh
-cf bind-service cloud-lab custom-config-server
-```
-### 6.4 - Restart your Application in PCF
-
-```sh
-cf restage cloud-lab
-```
-
-Verify the updated message at the /hello endpoint (when the application comes up again).
 
 ## 7 - Caching with Spring Boot
 ## 8 - Caching on PCF
