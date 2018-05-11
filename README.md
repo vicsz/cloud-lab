@@ -580,3 +580,70 @@ Try to /persons endpoint.
 It won't work as the database does not have the required Persons tables created.
 
 
+## 11 - Database Migrations
+
+Spring Boot supports two higher-level migration tools: Flyway and Liquibase.
+
+We will use Flyway for performing MySQL migrations.
+
+### 11.1 - Add the FlyAwayDB dependency to your build script:
+
+The full name of the dependency is :
+*org.flywaydb:flyway-core*
+
+If using Gradle, your new dependency block should look like:
+
+```groovy
+dependencies {
+	//...
+	compile("org.flywaydb:flyway-core")
+	//...
+}
+```
+
+## 11.2 - Add a Base Database Init Script:
+
+In the resources folder , create a db/migration sub-folder.
+
+In it create a V1__init.sql file (resources/db/migration/V1__init.sql).
+
+Add the following to it:
+
+```sql
+CREATE TABLE person (
+	id int NOT NULL AUTO_INCREMENT,
+	first_name varchar(255) not null,
+	last_name varchar(255) not null,
+	PRIMARY KEY (ID)
+);
+
+insert into person (first_name, last_name) values ('Peter', 'Parker');
+```
+
+## 11.3 - Rebuild and redeploy to PCF
+
+You can look at http://localhost:8080/actuator/flyway to review the list of scripts.
+
+FlyAway will only apply updates as needed, and keeps track of scripts run (in the flyway_schema_history table).
+
+## 11.4 - BONUS - Add a middleName value to the Person Object , and create Database Migration scripts for this
+
+```java
+    private String middleName;
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+```
+
+Create a V2__person_middle_name_addition.sql file (in db/migration).
+
+Add the following to it:
+
+```sql
+ALTER TABLE person ADD middle_name varchar(255);
+```
