@@ -530,3 +530,53 @@ Restart your app, you should now see all SQL statement in the log output.
 
 
 ## 10 - Data on PCF
+
+Note, the default cache implementation uses local in-memory caching, but this can be easily change to use 3rd party caching solutions such as Redis.
+
+### 10.1 - Add the MySQL dependency to the build script.
+
+The full name of the dependency is :
+*mysql:mysql-connector-java*
+
+If using Gradle, your new dependency block should look like:
+
+```groovy
+dependencies {
+    //...
+    compile("mysql:mysql-connector-java")
+    //...
+}
+```
+
+### 10.2 - Create a MySql Service Instance in PCF
+
+You can view available self-self / on-demand provisioning services via the marketplace.
+
+```sh
+cf marketplace
+```
+
+To create a MySQL Service run:
+
+```sh
+cf create-service p-mysql 100mb custom-mysql
+```
+
+### 10.3 - Bind the Service to our application
+
+```sh
+cf bind-service cloud-lab custom-mysql
+```
+
+Restage your app:
+```sh
+cf restage cloud-lab
+```
+
+Confirm connection to your MySQL Server using the health endpoint: /actuator/health
+
+Try to /persons endpoint.
+
+It won't work as the database does not have the required Persons tables created.
+
+
