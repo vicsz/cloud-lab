@@ -549,7 +549,7 @@ Restart your app, you should now see all SQL statement in the log output.
 
 ## 10 - Data on PCF
 
-Note, the default data implementation uses a local in-memory storage (H2), but this can be easily changed to something else like MySQL. 
+Note, the default data implementation uses a local in-memory storage (H2), but this can be easily changed to something else like MySQL.
 
 ### 10.1 - Add the MySQL dependency to the build script.
 
@@ -619,7 +619,7 @@ dependencies {
 }
 ```
 
-## 11.2 - Add a Base Database Init Script:
+### 11.2 - Add a Base Database Init Script:
 
 In the resources folder , create a db/migration sub-folder.
 
@@ -638,13 +638,13 @@ CREATE TABLE person (
 insert into person (first_name, last_name) values ('Peter', 'Parker');
 ```
 
-## 11.3 - Rebuild and redeploy to PCF
+### 11.3 - Rebuild and redeploy to PCF
 
 You can look at http://localhost:8080/actuator/flyway to review the list of scripts.
 
 FlyAway will only apply updates as needed, and keeps track of scripts run (in the flyway_schema_history table).
 
-## 11.4 - BONUS - Add a middleName value to the Person Object , and create Database Migration scripts for this
+### 11.4 - BONUS - Add a middleName value to the Person Object , and create Database Migration scripts for this
 
 ```java
     private String middleName;
@@ -665,3 +665,53 @@ Add the following to it:
 ```sql
 ALTER TABLE person ADD middle_name varchar(255);
 ```
+
+## 12 - Scheduling with Spring Boot
+
+### 12.1 - Enable Scheduling in your Spring Boot Application
+
+You will also need to turn on Scheduling by adding the EnableScheduling annotation to the CloudLabApplication class:
+
+```java
+@SpringBootApplication
+@EnableCaching
+@EnableScheduling
+public class CloudLabApplication {
+
+public static void main(String[] args) {
+    SpringApplication.run(CloudLabApplication.class, args);
+}
+}
+```
+
+EnableScheduling ensures that a background task executor is created. Without it, nothing gets scheduled.
+
+### 12.2 - Create a Simple Task to be executed every 5 seconds
+
+Our example will display the time every 5 seconds.
+
+```java
+@Component
+public class ScheduledTasks {
+
+    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+    @Scheduled(fixedRate = 5000)
+    public void reportCurrentTime() {
+        log.info("The time is now {}", dateFormat.format(new Date()));
+    }
+}
+```
+
+Restart your app.
+
+```sh
+./gradlew bootRun
+```
+
+Note the additional time messages in the output.
+
+Other options exist for scheduling tasks and can be seen at :
+https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling
