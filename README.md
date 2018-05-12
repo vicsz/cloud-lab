@@ -549,7 +549,7 @@ Restart your app, you should now see all SQL statement in the log output.
 
 ## 10 - Data on PCF
 
-Note, the default cache implementation uses local in-memory caching, but this can be easily change to use 3rd party caching solutions such as Redis.
+Note, the default data implementation uses a local in-memory storage (H2), but this can be easily changed to something else like MySQL. 
 
 ### 10.1 - Add the MySQL dependency to the build script.
 
