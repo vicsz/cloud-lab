@@ -22,7 +22,7 @@ Access will be provided during the workshop, or you can sign up for a free acces
 ### 0.1 - Generate a Spring Boot Template from https://start.spring.io
 Stick to the default settings, however update:
 - artifact name to cloud-lab
-- for dependencies add Web, Actuator
+- for dependencies add Web
 - select Gradle
 Download it, and unzip it.
 ### 0.2 - Import the project into your IDE.
@@ -121,9 +121,28 @@ Via the GUI observe additional instances being spun up.
 
 ## 3 - Operations with Spring Boot
 
-The Spring Actuator Dependency we added early includes out-of-the-box endpoint for monitoring and interacting with your application.
+The Spring Actuator Dependency adds out-of-the-box endpoints for monitoring and interacting with your application.
 
-### 3.1 - Check the localhost:8080/actuator/health endpoint
+### 3.1 - Add the Spring Boot Actuator dependency to your build script.
+
+The full name of the dependency is : *org.springframework.boot:spring-boot-starter-actuator*
+
+If using Gradle, your new dependency block should look like:
+
+```groovy
+dependencies {
+    //...
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    //...
+}
+```
+
+Re-run the application
+```sh
+./gradlew bootRun
+```
+
+### 3.2 - Check the localhost:8080/actuator/health endpoint
 
 Verify that it works on your local running instance of the app:
 
@@ -133,7 +152,7 @@ curl localhost:8080/actuator/health
 
 You can also use a browser
 
-### 3.2 - Expose additional information on the Health Endpoint
+### 3.3 - Expose additional information on the Health Endpoint
 
 To the application.properties file in resources add:
 
@@ -143,7 +162,7 @@ management.endpoint.health.show-details=ALWAYS
 
 Later on in the Workshop this endpoint will also show database information.
 
-### 3.3 - Check for new information on the health endpoint
+### 3.4 - Check for new information on the health endpoint
 
 This will require running rebuilding the application:
 
@@ -155,8 +174,7 @@ This will require running rebuilding the application:
 curl localhost:8080/actuator/health
 ```
 
-
-### 3.4 - Enable ALL Actuator endpoints
+### 3.5 - Enable ALL Actuator endpoints
 
 Currently exposed actuator endpoints can be viewed at: http://localhost:8080/actuator
 
@@ -170,7 +188,7 @@ management.endpoints.web.exposure.include=*
 
 Rebuild, and check the http://localhost:8080/actuator endpoint for available ones.
 
-### 3.5 - Add build information the /info endpoint
+### 3.6 - Add build information the /info endpoint
 
 We want to easily view build information from deployed artifacts.
 
@@ -184,7 +202,7 @@ Add the following to your build.gradle:
 
 Rebuild, and check the http://localhost:8080/actuator/info endpoint.
 
-### 3.6 - BONUS - Add GIT Information to the /info endpoint
+### 3.7 - BONUS - Add GIT Information to the /info endpoint
 
 Hint - you will need to init a GIT repot locally, and add the com.gorylenko.gradle-git-properties dependency in Gradle.
 
