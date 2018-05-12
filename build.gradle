@@ -34,6 +34,8 @@ dependencies {
 	compile('com.h2database:h2')
 	compile("mysql:mysql-connector-java")
 	compile("org.flywaydb:flyway-core")
+
+	compileOnly 'org.projectlombok:lombok'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

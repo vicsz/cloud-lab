@@ -536,7 +536,7 @@ Restart your app, and view the localhost:8080/persons.
 The default is configured to use the embedded H2 Database.
 
 
-## 9.6 - BONUS - Enable logging of all DML/DDL SQL statements
+### 9.6 - BONUS - Enable logging of all DML/DDL SQL statements
 
 Add the following to the *applications.properties* file.
 
@@ -546,6 +546,9 @@ spring.jpa.show-sql=true
 
 Restart your app, you should now see all SQL statement in the log output.
 
+### 9.7 - BONUS - Simplify the Person Entity class by auto-generating Getters/Setters.
+
+Hint - Add the Lombok dependency , and use the Data annotation.
 
 ## 10 - Data on PCF
 
