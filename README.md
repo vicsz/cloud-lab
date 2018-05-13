@@ -22,8 +22,9 @@ Access will be provided during the workshop, or you can sign up for a free acces
 ### 0.1 - Generate a Spring Boot Template from https://start.spring.io
 Stick to the default settings, however update:
 - artifact name to cloud-lab
-- for dependencies add Web
-- select Gradle
+- for dependencies add *Web*
+- select Gradle Project
+
 Download it, and unzip it.
 ### 0.2 - Import the project into your IDE.
 ## 1 - WebApplication with SpringBoot
@@ -40,6 +41,8 @@ public class HelloWorldController {
         return "Hola Mundo!";
     }
 }
+```
+
 ### 1.2 - Run the application
 ```sh
 ./gradlew bootRun
@@ -240,6 +243,8 @@ Note that PCF will automatically bring up a new instance.
 This can be monitored from the PCF Dev Portal.
 
 You can also view what happened in the logging window from the previous step.
+
+For additional information, you can also drill down into the *PCF Metrics" option in the Application page in PCF. This includes more in-depth logging, and crash analysis.
 
 ### 4.4 - BONUS - Create a PCF manifest to simplify deployments
 
@@ -669,6 +674,10 @@ Add the following to it:
 ALTER TABLE person ADD middle_name varchar(255);
 ```
 
+### 11.5 - BONUS - Add caching to a database lookup call
+
+Hint: Caching annotation to the PersonRepository interface.
+
 ## 12 - Scheduling with Spring Boot
 
 ### 12.1 - Enable Scheduling in your Spring Boot Application
@@ -718,3 +727,98 @@ Note the additional time messages in the output.
 
 Other options exist for scheduling tasks and can be seen at :
 https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling
+
+## 13 - Messaging with Spring Boot
+
+### 13.1 - Add the Spring Boot AMQP dependency to your build script.
+
+The full name of the dependency is : *org.springframework.boot:spring-boot-starter-amqp*
+
+If using Gradle, your new dependency block should look like:
+
+```groovy
+dependencies {
+//...
+compile('org.springframework.boot:spring-boot-starter-amqp')
+//...
+}
+```
+
+### 13.2 - Create a Controller for Sending and Receiving Queue Messages
+
+In a new QueueController java file , add:
+
+```java
+@RestController
+public class QueueController {
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
+
+    @RequestMapping("/sendmessage")
+    public void sendMessage(String input){
+        amqpTemplate.convertAndSend("myQueue",input);
+    }
+
+    @RequestMapping("/getmessage")
+    public String getMessage(){
+        Message message = amqpTemplate.receive("myQueue");
+        if(message == null)
+            return "Queue empty";
+
+        return message.toString();
+    }
+}
+
+```
+
+This will send messages to the default the "Default" exchange, with the "myQueue" routing key.
+
+* Unlike Caching / Data , we will go directly to testing in PCF *
+
+## 14 - Messaging on PCF
+
+### 14.1 - Create a RabbitMQ Service Instance in PCF
+
+You can view available self-self / on-demand provisioning services via the marketplace.
+
+```sh
+cf marketplace
+```
+
+To create a RabbitMQ Service run:
+
+```sh
+cf create-service p-rabbitmq standard custom-rabbitmq
+```
+
+### 14.2 - Bind the Service to your application
+
+```sh
+cf bind-service cloud-lab custom-rabbitmq
+```
+
+### 14.3 - Add the *myQueue* queue to your RabbitMQ instance
+
+In the PCF Dev Portal:
+
+In your DevSpace, select your RabbitMQ instance, and click Manage.
+
+This will pull up the RabbitMQ control GUI.
+
+Under the Queues tab, select add a new queue.
+
+Call it "myQueue".
+
+The Default Exchange will route to specific queues based on routingkey.
+
+Confirm connection to your RabbitMQ Server using the health endpoint: /actuator/health
+
+Rebuild and deploy your app to PCF , with the changes from the previous step.
+
+
+### 14.4 - Test messaging using the /getmessage and /sendmessage endpoints.
+
+To send message, curl or point your browser to /sendmessage?input=YOUR_MESSAGE_STRING
+
+To receive messages, curl or point your browser to /getmessage
