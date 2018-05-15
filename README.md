@@ -52,6 +52,7 @@ Access will be provided during the workshop, or you can sign-up for a free acces
 Key points:
 * Spring Boot Initializr
 * Maven vs Gradle
+* Maven Wrapper / Gradle Wrapper
 
 ### 0.1 - Generate a Spring Boot Template from https://start.spring.io
 Stick to the default settings, however update:
@@ -62,6 +63,10 @@ Stick to the default settings, however update:
 <img src="img/init-screen.png">
 
 Download it, and unzip it.
+
+Note the mvnw or gradlew files:
+These are the Wrapper components for Maven and Gradle: ensuring build script version consistency, removing the dependency of having these build tools installed , and simplifying CI build agent dependencies (only a JDK will be required).
+
 ### 0.2 - Import the project into your IDE
 
 Note make sure to do an *import* and not just *open* , to allow for your IDE to correctly pull down dependencies.
@@ -229,7 +234,8 @@ Via the GUI observe additional instances being spun up.
 ## 3 - Operations with Spring Boot
 
 Key points:
-* Spring Boot Actuator
+* Spring Boot Actuator - including walk-through of available endpoints
+* Spring Boot Dependency Management (no need for individual artifact versioning)
 * Exposing additional Actuator information
 * Build / and GIT information
 
