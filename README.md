@@ -1,10 +1,10 @@
 # Cloud Lab
 
-Cloud Native Lab - Simple Workshop demostrating Cloud-Native development with Spring Boot and Pivotal Cloud Foundry.
+Cloud Native Lab - Simple Workshop demonstrating Cloud-Native development with Spring Boot and Pivotal Cloud Foundry.
 
 ## Prerequisites
 
-### Modern Java JDK Installed (alteast 1.8)
+### Modern Java JDK Installed (at-least Java8)
 
 ### Cloud Foundry Command Line Interface (cf CLI) installed
 
@@ -16,7 +16,7 @@ Intellij recommended .. The Community addition is free.
 
 ### Access to a Pivotal Cloud Foundry instance
 
-Access will be provided during the workshop, or you can sign up for a free access at : https://run.pivotal.io
+Access will be provided during the workshop, or you can sign-up for a free access at : https://run.pivotal.io
 
 ## 0 - Initialization
 ### 0.1 - Generate a Spring Boot Template from https://start.spring.io
@@ -26,7 +26,10 @@ Stick to the default settings, however update:
 - select Gradle Project
 
 Download it, and unzip it.
-### 0.2 - Import the project into your IDE.
+### 0.2 - Import the project into your IDE
+
+Note make sure to do an *import* and not just *open* , to allow for your IDE to correctly pull down dependencies.
+
 ## 1 - WebApplication with SpringBoot
 ### 1.1 - Implement a HelloWorld endpoint
 This can be done by creating a *HelloWorldController* Java class file with:
@@ -47,6 +50,21 @@ public class HelloWorldController {
 ```sh
 ./gradlew bootRun
 ```
+
+Or you can build the artifact with:
+
+```sh
+./gradlew build
+```
+
+and then run it directly as a Jar file:
+
+```sh
+java -jar build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
+```
+
+Note Tomcat is embedded inside of the build artifact.
+
 ### 1.3 - Test the /hello endpoint
 The address will be: localhost:8080/hello
 
@@ -54,6 +72,7 @@ You can test via a browser or commandline:
 ```sh
 curl localhost:8080/hello
 ```
+
 ### 1.4 - BONUS - Add Unit Tests for HelloWorld endpoint
 This can be done by creating a *HelloWorldControllerTests* Java class file in the test/java directory with:
 
@@ -82,21 +101,29 @@ From the commandline you can run them with:
 ./gradlew test
 ```
 
+Note: RestTemplate and TestRestTemplate are the conventional ways for invoking / and testing HTTP/Rest calls.
+
+
 ## 2 - WebApplication on PCF
-### 2.1 - Login into the PCF instance that you are using if required
+### 2.1 - Login into the PCF instance that you are using (if required)
 
 ```sh
 cf login -a ENTER_API_URL_HERE
 ```
 
 Enter your Username and Password.
+
 ### 2.2 - Deploy your application to PCF
 
 ```sh
 cf push cloud-lab -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
 
-### 2.3 - Login into the PCF portal.
+This will automatically create a new application in your default PCF development space, with the specific jar artifact deployed.
+
+Note that PCF will automatically detect that this is a Java application, and use the appropriate *BuildPack*.
+
+### 2.3 - Login into the PCF portal to view your newly deployed / created application
 
 If you are using Pivotal Web Services, the portal is at:
 
@@ -163,7 +190,7 @@ To the application.properties file in resources add:
 management.endpoint.health.show-details=ALWAYS
 ```
 
-Later on in the Workshop this endpoint will also show database information.
+Later on in the Workshop this endpoint will also show external dependency status and information (including Data, Cache, and Messaging).
 
 ### 3.4 - Check for new information on the health endpoint
 
@@ -193,7 +220,7 @@ Rebuild, and check the http://localhost:8080/actuator endpoint for available one
 
 ### 3.6 - Add build information the /info endpoint
 
-We want to easily view build information from deployed artifacts.
+We want to be able to easily view build information from running instances of our app.
 
 Add the following to your build.gradle:
 
@@ -207,12 +234,12 @@ Rebuild, and check the http://localhost:8080/actuator/info endpoint.
 
 ### 3.7 - BONUS - Add GIT Information to the /info endpoint
 
-Hint - you will need to init a GIT repot locally, and add the com.gorylenko.gradle-git-properties dependency in Gradle.
+Hint - you will need to init a GIT repo locally, and add the com.gorylenko.gradle-git-properties dependency in Gradle.
 
 ## 4 - Operations on PCF
-### 4.1 - Add a /kill endpoint to your App and redeploy your App
+### 4.1 - Add an endpoint to your App to simulate JVM crashes
 
-Add a new KillController to allow simulating of a JVM crash.
+Add a new KillController with a Kill endpoint/
 
 ```java
 @RestController
@@ -318,9 +345,9 @@ Verify the updated message at the /hello endpoint.
 
 ## 7 - Caching with Spring Boot
 
-### 7.1 - Add a slow / costly endpoint to the Application.
+### 7.1 - Add a slow , costly endpoint to the Application.
 
-One example would be performing converting a String to UpperCase.
+One example would be performing an uppercase operation on a String with a time delay.
 
 ```java
 @RestController
@@ -361,7 +388,7 @@ compile('org.springframework.boot:spring-boot-starter-cache')
 }
 ```
 
-### 7.3 - Enable Caching on the endpoint by using the Cache Annotation.
+### 7.3 - Enable Caching on the endpoint by using the *Cacheable* Annotation.
 
 Updated CacheExampleController should look like:
 
@@ -375,7 +402,9 @@ public String uppercase(String input ){
 }
 ```
 
-You will also need to turn on Caching by adding the EnableCaching annotation to the CloudLabApplication class:
+You will also need to turn on Caching (app wide) by adding the EnableCaching annotation to your app.
+
+This can be done in the CloudLabApplication class:
 
 ```java
 @SpringBootApplication
@@ -392,7 +421,7 @@ Restart your app, and verify that subsequent calls to the endpoint return much q
 
 ### 7.4 - BONUS - Add an eviction endpoint to the controller
 
-It will evict specified keys from the cache.
+Given a String it will evict it from the Cache if present.
 
 Hint: CacheEvict annotation
 
@@ -406,10 +435,10 @@ If using Gradle, your new dependency block should look like:
 
 ```groovy
 dependencies {
-//...
-compile('org.springframework.boot:spring-boot-starter-data-redis')
-compile('org.apache.commons:commons-pool2:2.4.2')
-//...
+    //...
+    compile('org.springframework.boot:spring-boot-starter-data-redis')
+    compile('org.apache.commons:commons-pool2:2.4.2')
+    //...
 }
 ```
 
@@ -483,7 +512,7 @@ dependencies {
 
 ### 9.2 - Add a Simple Domain Object
 
-Such as a Person class:
+One example would be a Person object with First and Last names variables.
 
 ```java
 @Entity
@@ -534,11 +563,15 @@ INSERT INTO PERSON(id, first_name, last_name) VALUES (2, 'Steve', 'Rogers');
 
 ```
 
+
+
 ### 9.5 - Test the new persons endpoints
 
 Restart your app, and view the localhost:8080/persons.
 
 The default is configured to use the embedded H2 Database.
+
+Note how the Interface / and Entity Object were sufficient for Spring Boot to generate Rest compliant endpoints with fully implemented database calls.
 
 
 ### 9.6 - BONUS - Enable logging of all DML/DDL SQL statements
@@ -550,6 +583,8 @@ spring.jpa.show-sql=true
 ```
 
 Restart your app, you should now see all SQL statement in the log output.
+
+This can be useful in identifying what actual SQL calls Spring Data is making.
 
 ### 9.7 - BONUS - Simplify the Person Entity class by auto-generating Getters/Setters.
 
@@ -603,7 +638,11 @@ Confirm connection to your MySQL Server using the health endpoint: /actuator/hea
 
 Try to /persons endpoint.
 
-It won't work as the database does not have the required Persons tables created.
+It won't work as the database used does not have the required Persons tables created.
+
+Where as with local H2 database usage (from the previous) step, Spring Boot auto-generates (from scratch) the necessary tables schemas each time the app is run. With a long-lived / externalized / and shared database (such as MySQL) , we need a better strategy for keeping database schemas up-to-date.
+
+
 
 
 ## 11 - Database Migrations
@@ -636,14 +675,14 @@ In it create a V1__init.sql file (resources/db/migration/V1__init.sql).
 Add the following to it:
 
 ```sql
-CREATE TABLE person (
+CREATE TABLE PERSON (
 	id int NOT NULL AUTO_INCREMENT,
 	first_name varchar(255) not null,
 	last_name varchar(255) not null,
 	PRIMARY KEY (ID)
 );
 
-insert into person (first_name, last_name) values ('Peter', 'Parker');
+INSERT INTO PERSON (first_name, last_name) VALUES ('Peter', 'Parker');
 ```
 
 ### 11.3 - Rebuild and redeploy to PCF
@@ -674,15 +713,21 @@ Add the following to it:
 ALTER TABLE person ADD middle_name varchar(255);
 ```
 
+Build and redeploy to PCF.
+
+Flyway will automatically upgrade the Database Schema version to v2. 
+
 ### 11.5 - BONUS - Add caching to a database lookup call
 
-Hint: Caching annotation to the PersonRepository interface.
+Hint: Add a method definition with a Caching annotation to the PersonRepository interface.
 
 ## 12 - Scheduling with Spring Boot
 
 ### 12.1 - Enable Scheduling in your Spring Boot Application
 
-You will also need to turn on Scheduling by adding the EnableScheduling annotation to the CloudLabApplication class:
+You will also need to turn on Scheduling (app wide) by adding the EnableScheduling annotation to your app.
+
+This can be done in the CloudLabApplication file:
 
 ```java
 @SpringBootApplication
@@ -690,9 +735,9 @@ You will also need to turn on Scheduling by adding the EnableScheduling annotati
 @EnableScheduling
 public class CloudLabApplication {
 
-public static void main(String[] args) {
-    SpringApplication.run(CloudLabApplication.class, args);
-}
+    public static void main(String[] args) {
+        SpringApplication.run(CloudLabApplication.class, args);
+    }
 }
 ```
 
@@ -700,7 +745,7 @@ EnableScheduling ensures that a background task executor is created. Without it,
 
 ### 12.2 - Create a Simple Task to be executed every 5 seconds
 
-Our example will display the time every 5 seconds.
+Our example will display the time:
 
 ```java
 @Component
@@ -738,9 +783,9 @@ If using Gradle, your new dependency block should look like:
 
 ```groovy
 dependencies {
-//...
-compile('org.springframework.boot:spring-boot-starter-amqp')
-//...
+    //...
+    compile('org.springframework.boot:spring-boot-starter-amqp')
+    //...
 }
 ```
 
@@ -774,7 +819,7 @@ public class QueueController {
 
 This will send messages to the default the "Default" exchange, with the "myQueue" routing key.
 
-* Unlike Caching / Data , we will go directly to testing in PCF *
+*Unlike Caching / Data , we will go directly to testing in PCF*
 
 ## 14 - Messaging on PCF
 
@@ -810,7 +855,7 @@ Under the Queues tab, select add a new queue.
 
 Call it "myQueue".
 
-The Default Exchange will route to specific queues based on routingkey.
+The Default Exchange will route to specific queues based on specified routing key.
 
 Confirm connection to your RabbitMQ Server using the health endpoint: /actuator/health
 
