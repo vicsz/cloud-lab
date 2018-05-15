@@ -2,6 +2,35 @@
 
 Cloud Native Lab - Simple Workshop demonstrating Cloud-Native development with Spring Boot and Pivotal Cloud Foundry.
 
+# Items covered:
+
+## Spring Boot
+
+* Initializr
+* Web
+* Actuator
+* Profiles
+* Cach
+* Data
+* Data Migration (Flyway)
+* Scheduling
+* Messages (AMQB)
+
+## PCF
+
+* Deployment
+* Scaling / Auto-Scaling
+* Self-Healing
+* Metrics
+* Logging
+* Market Place
+* MySQL
+* Redis
+* RabbitMQ
+
+
+## PCF
+
 ## Prerequisites
 
 ### Modern Java JDK Installed (at-least Java8)
@@ -24,6 +53,8 @@ Stick to the default settings, however update:
 - artifact name to cloud-lab
 - for dependencies add *Web*
 - select Gradle or Maven Project
+
+<img src="img/init-screen.png">
 
 Download it, and unzip it.
 ### 0.2 - Import the project into your IDE
@@ -286,27 +317,19 @@ Or for Maven in the pom.xml .. update the build block to the following .. note t
 
 ```xml
 <build>
-    <plugins>
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>build-info</goal>
-                    </goals>
-                    <configuration>
-                        <additionalProperties>
-                            <encoding.source>UTF-8</encoding.source>
-                            <encoding.reporting>UTF-8</encoding.reporting>
-                            <java.source>${maven.compiler.source}</java.source>
-                            <java.target>${maven.compiler.target}</java.target>
-                        </additionalProperties>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
+	<plugins>
+		<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+			<executions>
+				<execution>
+					<goals>
+						<goal>build-info</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+	</plugins>
 </build>
 ```xml
 
@@ -441,6 +464,8 @@ Build and Redeploy to PCF.
 
 Verify the updated message at the /hello endpoint.
 
+Note: You can also use the Spring Config Server (available as a Service in the MarketPlace) to inject properties from an external source such as a GitHub repo.
+
 ## 7 - Caching with Spring Boot
 
 ### 7.1 - Add a slow , costly endpoint to the Application.
@@ -535,7 +560,7 @@ If using Gradle, your new dependency block should look like:
 dependencies {
     //...
     compile('org.springframework.boot:spring-boot-starter-data-redis')
-    compile('org.apache.commons:commons-pool2:2.4.2')
+    compile('org.apache.commons:commons-pool2')
     //...
 }
 ```
@@ -871,6 +896,10 @@ Note the additional time messages in the output.
 Other options exist for scheduling tasks and can be seen at :
 https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling
 
+### 12.3 - View currently scheduled tasks by hitting the scheduledtasks endpoint
+
+http://localhost:8080/actuator/scheduledtasks
+
 ## 13 - Messaging with Spring Boot
 
 ### 13.1 - Add the Spring Boot AMQP dependency to your build script.
@@ -917,7 +946,18 @@ public class QueueController {
 
 This will send messages to the default the "Default" exchange, with the "myQueue" routing key.
 
-*Unlike Caching / Data , we will go directly to testing in PCF*
+*For purpose of workship, unlike Caching / Data , we will go directly to testing in PCF*
+
+If do have a local instance of RabbitMQ, you can point to it by updating your application properties with the correct connection settings:
+
+application.properties
+```properties
+spring.rabbitmq.host = 127.0.0.1
+spring.rabbitmq.port = 5672
+spring.rabbitmq.username = guest
+spring.rabbitmq.password = guest
+```
+
 
 ## 14 - Messaging on PCF
 
@@ -949,6 +989,8 @@ In your DevSpace, select your RabbitMQ instance, and click Manage.
 
 This will pull up the RabbitMQ control GUI.
 
+<img src="img/queue-screen.png">
+
 Under the Queues tab, select add a new queue.
 
 Call it "myQueue".
@@ -965,3 +1007,17 @@ Rebuild and deploy your app to PCF , with the changes from the previous step.
 To send message, curl or point your browser to /sendmessage?input=YOUR_MESSAGE_STRING
 
 To receive messages, curl or point your browser to /getmessage
+
+## 15 - Spring Cloud
+
+** Discussion Item**
+
+Spring Cloud provides tools for developers to quickly build some of the common patterns in distributed systems (e.g. configuration management, service discovery, circuit breakers, intelligent routing, micro-proxy, control bus, one-time tokens, global locks, leadership election, distributed sessions, cluster state). Coordination of distributed systems leads to boiler plate patterns, and using Spring Cloud developers can quickly stand up services and applications that implement those patterns. They will work well in any distributed environment, including the developer's own laptop, bare metal data centres, and managed platforms such as Cloud Foundry.
+
+### 15.1 - Spring Cloud Config
+
+Centralized external configuration management backed by a git repository. The configuration resources map directly to Spring `Environment` but could be used by non-Spring applications if desired.
+
+### 15.2 - Spring Cloud NetFlix
+
+Integration with various Netflix OSS components (Eureka, Hystrix, Zuul, Archaius, etc.).
