@@ -1020,12 +1020,16 @@ Restart your app.
 
 Note the additional time messages in the output.
 
-Other options exist for scheduling tasks and can be seen at :
-https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling
+
 
 ### 12.3 - View currently scheduled tasks by hitting the scheduledtasks endpoint
 
 http://localhost:8080/actuator/scheduledtasks
+
+### 12.4 - BONUS - Add additional Scheduled tasks with different scheduling options
+
+Other options for scheduling tasks and can be seen at :
+https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling
 
 ## 13 - Messaging with Spring Boot
 
