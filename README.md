@@ -23,7 +23,7 @@ Access will be provided during the workshop, or you can sign-up for a free acces
 Stick to the default settings, however update:
 - artifact name to cloud-lab
 - for dependencies add *Web*
-- select Gradle Project
+- select Gradle or Maven Project
 
 Download it, and unzip it.
 ### 0.2 - Import the project into your IDE
@@ -47,9 +47,13 @@ public class HelloWorldController {
 ```
 
 ### 1.2 - Run the application
+
+With Gradle:
 ```sh
 ./gradlew bootRun
 ```
+
+(on windows machines use : gradlew.bat bootRun)
 
 Or you can build the artifact with:
 
@@ -63,7 +67,27 @@ and then run it directly as a Jar file:
 java -jar build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
 
-Note Tomcat is embedded inside of the build artifact.
+For maven:
+
+```sh
+./mvnw spring-boot:run
+```
+
+To build the artifact:
+
+Run:
+
+```sh
+./mvnw package
+```
+
+```sh
+java -jar ./target/cloud-lab-0.0.1-SNAPSHOT.jar
+```
+
+Note Tomcat is embedded inside of the build artifact (you don't need an external application Server).
+
+Also note, the different default output directories for Maven and Gradle.
 
 ### 1.3 - Test the /hello endpoint
 The address will be: localhost:8080/hello
@@ -115,9 +139,12 @@ Enter your Username and Password.
 
 ### 2.2 - Deploy your application to PCF
 
+For Gradle:
 ```sh
 cf push cloud-lab -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
+For Maven:
+cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar
 
 This will automatically create a new application in your default PCF development space, with the specific jar artifact deployed.
 
@@ -167,9 +194,31 @@ dependencies {
 }
 ```
 
+For Maven:
+
+```xml
+<dependencies>
+    <!-- other dependencies -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+     <!-- other dependencies -->
+</dependencies>
+```
+
+
 Re-run the application
 ```sh
 ./gradlew bootRun
+```
+
+or with Maven:
+
+```sh
+./mvnw spring-boot:run
 ```
 
 ### 3.2 - Check the localhost:8080/actuator/health endpoint
@@ -222,6 +271,8 @@ Rebuild, and check the http://localhost:8080/actuator endpoint for available one
 
 We want to be able to easily view build information from running instances of our app.
 
+You will need to generate a META-INF/build-info.properties in your class path .. this can be automated :
+
 Add the following to your build.gradle:
 
  ```groovy
@@ -230,11 +281,53 @@ Add the following to your build.gradle:
  }
  ```
 
+Or for Maven in the pom.xml .. update the build block to the following .. note the addition of the executions block:
+
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>build-info</goal>
+                    </goals>
+                    <configuration>
+                        <additionalProperties>
+                            <encoding.source>UTF-8</encoding.source>
+                            <encoding.reporting>UTF-8</encoding.reporting>
+                            <java.source>${maven.compiler.source}</java.source>
+                            <java.target>${maven.compiler.target}</java.target>
+                        </additionalProperties>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+```xml
+
 Rebuild, and check the http://localhost:8080/actuator/info endpoint.
 
 ### 3.7 - BONUS - Add GIT Information to the /info endpoint
 
 Hint - you will need to init a GIT repo locally, and add the com.gorylenko.gradle-git-properties dependency in Gradle.
+
+For Maven users, the spring-boot-starter-parent POM includes a pre-configured plugin to generate a git.properties file. To use it, add the following declaration to your POM:
+
+```xml
+<build>
+	<plugins>
+		<plugin>
+			<groupId>pl.project13.maven</groupId>
+			<artifactId>git-commit-id-plugin</artifactId>
+		</plugin>
+	</plugins>
+</build>
+```
 
 ## 4 - Operations on PCF
 ### 4.1 - Add an endpoint to your App to simulate JVM crashes
@@ -257,6 +350,11 @@ Rebuild your app, and redeploy to PCF.
 ```sh
  ./gradlew build && cf push cloud-lab -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
+
+```sh
+ ./mvnw package && cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar
+```
+
 ### 4.2 - In separate terminal window TAIL the PCF app logs
 
 ```sh
@@ -715,7 +813,7 @@ ALTER TABLE person ADD middle_name varchar(255);
 
 Build and redeploy to PCF.
 
-Flyway will automatically upgrade the Database Schema version to v2. 
+Flyway will automatically upgrade the Database Schema version to v2.
 
 ### 11.5 - BONUS - Add caching to a database lookup call
 
