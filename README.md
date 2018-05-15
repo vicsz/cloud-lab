@@ -48,6 +48,11 @@ Intellij recommended .. The Community addition is free.
 Access will be provided during the workshop, or you can sign-up for a free access at : https://run.pivotal.io
 
 ## 0 - Initialization
+
+Key points:
+* Spring Boot Initializr
+* Maven vs Gradle
+
 ### 0.1 - Generate a Spring Boot Template from https://start.spring.io
 Stick to the default settings, however update:
 - artifact name to cloud-lab
@@ -62,6 +67,13 @@ Download it, and unzip it.
 Note make sure to do an *import* and not just *open* , to allow for your IDE to correctly pull down dependencies.
 
 ## 1 - WebApplication with SpringBoot
+
+Key points:
+* Spring Boot Web
+* Creating a Simple Helloworld endpoint
+* Running the App locally
+* No XML!
+
 ### 1.1 - Implement a HelloWorld endpoint
 This can be done by creating a *HelloWorldController* Java class file with:
 
@@ -160,6 +172,11 @@ Note: RestTemplate and TestRestTemplate are the conventional ways for invoking /
 
 
 ## 2 - WebApplication on PCF
+
+Key points:
+* Deploying to PCF
+* Scaling in PCF
+
 ### 2.1 - Login into the PCF instance that you are using (if required)
 
 ```sh
@@ -210,6 +227,11 @@ cf scale cloud-lab -i 2
 Via the GUI observe additional instances being spun up.
 
 ## 3 - Operations with Spring Boot
+
+Key points:
+* Spring Boot Actuator
+* Exposing additional Actuator information
+* Build / and GIT information
 
 The Spring Actuator Dependency adds out-of-the-box endpoints for monitoring and interacting with your application.
 
@@ -300,7 +322,7 @@ management.endpoints.web.exposure.include=*
 
 Rebuild, and check the http://localhost:8080/actuator endpoint for available ones.
 
-### 3.6 - Add build information the /info endpoint
+### 3.6 - BONUS - Add build information the /info endpoint
 
 We want to be able to easily view build information from running instances of our app.
 
@@ -355,6 +377,13 @@ For Maven users, the spring-boot-starter-parent POM includes a pre-configured pl
 ```
 
 ## 4 - Operations on PCF
+
+Key points:
+* Dealing with Crashes
+* Metric and Logging
+* Auto-Scaling
+* Zero down-time deployments
+
 ### 4.1 - Add an endpoint to your App to simulate JVM crashes
 
 Add a new KillController with a Kill endpoint/
@@ -452,8 +481,17 @@ Note, all cloud-lab subdomain traffic will now be mapped to our recent deploy.
 
 **Replace ENTER_PCF_DOMAIN with domain from *cf routes* step.**
 
+Cloud Foundry community members have written plugins to further automate the blue-green deployment process. These include:
+
+Autopilot: Autopilot is a Cloud Foundry Go plugin that provides a subcommand, zero-downtime-push, for hands-off, zero-downtime application deploys.
+BlueGreenDeploy: cf-blue-green-deploy is a plugin, written in Go, for the Cloud Foundry Command Line Interface (cf CLI) that automates a few steps involved in zero-downtime deploys.
+
 
 ## 5 - Configuration with Spring Boot
+
+Key points:
+* Spring Boot Profiles
+* Configuration precedence
 
 Spring Boot lets you externalize your configuration so that you can work with the same application code in different environments.
 
@@ -489,6 +527,11 @@ helloworld.message="Hello World - default config file"
 Default should be "Hello World - default config file"
 
 ## 6 - Configuration on PCF
+
+Key points:
+* The cloud profile
+* Spring Cloud Config Server overview
+
 ### 6.1 - Add a custom HelloWorld message for cloud deployments
 
 PCF deploys will automatically load *cloud* profile settings.
@@ -508,6 +551,10 @@ Verify the updated message at the /hello endpoint.
 Note: You can also use the Spring Config Server (available as a Service in the MarketPlace) to inject properties from an external source such as a GitHub repo.
 
 ## 7 - Caching with Spring Boot
+
+Key points:
+* Spring Boot Cache
+* The Cacheable annotation
 
 ### 7.1 - Add a slow , costly endpoint to the Application.
 
@@ -583,15 +630,22 @@ public class CloudLabApplication {
 
 Restart your app, and verify that subsequent calls to the endpoint return much quicker.
 
+Note, the default cache implementation uses local in-memory caching, but this can be easily change to use 3rd party caching solutions such as Redis.
+
 ### 7.4 - BONUS - Add an eviction endpoint to the controller
 
-Given a String it will evict it from the Cache if present.
+Given a String, evict it from the Cache.
 
 Hint: CacheEvict annotation
 
 ## 8 - Caching on PCF
 
-Note, the default cache implementation uses local in-memory caching, but this can be easily change to use 3rd party caching solutions such as Redis.
+Key points:
+* Spring Boot Redis
+* CF MarketPlace / Service Broker
+* Binding Services to App Instances
+* Creating a Redis Instance in PCF
+
 
 ### 8.1 - Add the Spring Boot Redis and commons-pool dependencies to your build script.
 
@@ -654,6 +708,11 @@ spring.cache.type=REDIS
 Verify that Caching works locally and in PCF.
 
 ## 9 - Data with Spring Boot
+
+Key points:
+* Spring Boot Data / Rest
+* Auto-generated Rest Compliant endpoints for Entity Domain Objects
+* Default Data using import.sql
 
 ### 9.1 - Add the Spring Boot Data JPA , Rest and H2Database dependencies to your build script.
 
@@ -737,6 +796,7 @@ The default is configured to use the embedded H2 Database.
 
 Note how the Interface / and Entity Object were sufficient for Spring Boot to generate Rest compliant endpoints with fully implemented database calls.
 
+Note, the default data implementation uses a local in-memory storage (H2), but this can be easily changed to something else like MySQL.
 
 ### 9.6 - BONUS - Enable logging of all DML/DDL SQL statements
 
@@ -762,7 +822,9 @@ https://projectlombok.org/features/all
 
 ## 10 - Data on PCF
 
-Note, the default data implementation uses a local in-memory storage (H2), but this can be easily changed to something else like MySQL.
+Key points:
+* MySQL Connector
+* Creating a MySQL Instance in PCF
 
 ### 10.1 - Add the MySQL dependency to the build script.
 
@@ -816,6 +878,9 @@ Where as with local H2 database usage (from the previous) step, Spring Boot auto
 
 
 ## 11 - Database Migrations
+
+Key points:
+* High-level Database Migration Versioning Tools
 
 Spring Boot supports two higher-level migration tools: Flyway and Liquibase.
 
@@ -897,7 +962,7 @@ App can be downloaded from:
 
 https://github.com/pivotal-cf/PivotalMySQLWeb
 
-It will also need to be bound to your MySQL instance. 
+It will also need to be bound to your MySQL instance.
 
 ## 12 - Scheduling with Spring Boot
 
@@ -957,6 +1022,10 @@ http://localhost:8080/actuator/scheduledtasks
 
 ## 13 - Messaging with Spring Boot
 
+Key points:
+* Spring Boot AMQP
+* Sending and Receiving Messages
+
 ### 13.1 - Add the Spring Boot AMQP dependency to your build script.
 
 The full name of the dependency is : *org.springframework.boot:spring-boot-starter-amqp*
@@ -1013,8 +1082,12 @@ spring.rabbitmq.username = guest
 spring.rabbitmq.password = guest
 ```
 
+Your RabbitMQ instance will need to have a queue create called **myQueue**. Messages sent to the Default exchange with the **myQueue** routingkey will be automatically routed to the **myQueue** queue.
 
 ## 14 - Messaging on PCF
+
+Key points:
+* Creating a RabbitMQ Instance in PCF
 
 ### 14.1 - Create a RabbitMQ Service Instance in PCF
 
@@ -1065,7 +1138,7 @@ To receive messages, curl or point your browser to /getmessage
 
 ## 15 - Spring Cloud
 
-** Discussion Item**
+**Discussion Item**
 
 Spring Cloud provides tools for developers to quickly build some of the common patterns in distributed systems (e.g. configuration management, service discovery, circuit breakers, intelligent routing, micro-proxy, control bus, one-time tokens, global locks, leadership election, distributed sessions, cluster state). Coordination of distributed systems leads to boiler plate patterns, and using Spring Cloud developers can quickly stand up services and applications that implement those patterns. They will work well in any distributed environment, including the developer's own laptop, bare metal data centres, and managed platforms such as Cloud Foundry.
 
