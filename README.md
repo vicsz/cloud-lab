@@ -10,7 +10,7 @@ Cloud Native Lab - Simple Workshop demonstrating Cloud-Native development with S
 * Web
 * Actuator
 * Profiles
-* Cach
+* Cache
 * Data
 * Data Migration (Flyway)
 * Scheduling
@@ -175,7 +175,9 @@ For Gradle:
 cf push cloud-lab -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
 For Maven:
+```sh
 cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar
+```
 
 This will automatically create a new application in your default PCF development space, with the specific jar artifact deployed.
 
@@ -331,7 +333,7 @@ Or for Maven in the pom.xml .. update the build block to the following .. note t
 		</plugin>
 	</plugins>
 </build>
-```xml
+```
 
 Rebuild, and check the http://localhost:8080/actuator/info endpoint.
 
@@ -378,7 +380,7 @@ Rebuild your app, and redeploy to PCF.
  ./mvnw package && cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
 
-### 4.2 - In separate terminal window TAIL the PCF app logs
+### 4.2 - In separate terminal window, TAIL the PCF app logs
 
 ```sh
 cf logs cloud-lab
@@ -408,9 +410,48 @@ You can customize deployment settings, as well as default binary path.
 
 https://docs.run.pivotal.io/appsman-services/autoscaler/using-autoscaler.html
 
-From your Dev Space in the PCF Dev GUI , add an App-Scaler Server, bind it to your Application.
+### 4.6 - BONUS - Perform a Blue-Green Deployment to Reduce Downtime and Risk
 
-It is configurable via the Manage button.
+Blue-green deployment is a technique that reduces downtime and risk by running two identical production environments called Blue and Green.
+
+At any time, only one of the environments is live, with the live environment serving all production traffic. For this example, Blue is currently live and Green is idle.
+
+#### 4.6.1 - BONUS - Deploy a new instance of our cloud-lab
+
+```sh
+cf push cloud-lab-2 -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
+```
+
+Right now, we have 2 deploys apps running (they can be different version of the application).
+
+#### 4.6.2 - Route all cloud-lab subdomain traffic to cloud-lab2 (in addition to our original cloud-lab instance).
+
+For reference, current Routes can be viewed with:
+
+```sh
+cf routes
+```
+
+Note the domain used for your cloud-lab apps.
+
+Route cloud-lab subdomain traffic to cloud-lab:
+
+```sh
+ cf map-route cloud-lab-2 ENTER_PCF_DOMAIN --hostname cloud-lab
+```
+
+**Replace ENTER_PCF_DOMAIN with domain from *cf routes* step.**
+
+##### 4.6.3 - Unmap cloud-lab traffic to the cloud-lab subdomain
+
+```
+cf unmap-route cloud-lab ENTER_PCF_DOMAIN --hostname cloud-lab
+```
+
+Note, all cloud-lab subdomain traffic will now be mapped to our recent deploy.
+
+**Replace ENTER_PCF_DOMAIN with domain from *cf routes* step.**
+
 
 ## 5 - Configuration with Spring Boot
 
@@ -505,9 +546,9 @@ If using Gradle, your new dependency block should look like:
 
 ```groovy
 dependencies {
-//...
-compile('org.springframework.boot:spring-boot-starter-cache')
-//...
+    //...
+    compile('org.springframework.boot:spring-boot-starter-cache')
+    //...
 }
 ```
 
@@ -713,6 +754,12 @@ This can be useful in identifying what actual SQL calls Spring Data is making.
 
 Hint - Add the Lombok dependency , and use the Data annotation.
 
+Project Lombok is a java library that automatically plugs into your editor and build tools to can reduce Java Boiler Plate code in a number if ways including: Getter/Setter generation, Builder Pattern implementation, Checked Exception handling, and Resource Management.
+
+Full list of features are available at:
+
+https://projectlombok.org/features/all
+
 ## 10 - Data on PCF
 
 Note, the default data implementation uses a local in-memory storage (H2), but this can be easily changed to something else like MySQL.
@@ -759,7 +806,7 @@ cf restage cloud-lab
 
 Confirm connection to your MySQL Server using the health endpoint: /actuator/health
 
-Try to /persons endpoint.
+Try to hit the /persons endpoint.
 
 It won't work as the database used does not have the required Persons tables created.
 
