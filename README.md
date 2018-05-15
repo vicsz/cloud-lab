@@ -719,6 +719,7 @@ Key points:
 * Spring Boot Data / Rest
 * Auto-generated Rest Compliant endpoints for Entity Domain Objects
 * Default Data using import.sql
+* Project Lombok
 
 ### 9.1 - Add the Spring Boot Data JPA , Rest and H2Database dependencies to your build script.
 
