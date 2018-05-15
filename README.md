@@ -891,6 +891,14 @@ Flyway will automatically upgrade the Database Schema version to v2.
 
 Hint: Add a method definition with a Caching annotation to the PersonRepository interface.
 
+### 11.6 - BONUS - Deploy the PivotalMySQLWeb App into PCF to view the flyway_schema_history schema / and row values.
+
+App can be downloaded from:
+
+https://github.com/pivotal-cf/PivotalMySQLWeb
+
+It will also need to be bound to your MySQL instance. 
+
 ## 12 - Scheduling with Spring Boot
 
 ### 12.1 - Enable Scheduling in your Spring Boot Application
