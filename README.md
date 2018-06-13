@@ -231,6 +231,37 @@ cf scale cloud-lab -i 2
 
 Via the GUI observe additional instances being spun up.
 
+### 2.6 - BONUS - Add a HomePage Controller to display PCF information using VCAP variables
+
+```java
+@RestController
+public class HomePageController {
+
+    @Value("${vcap.application.name:localMachine}")
+    private String applicationName;
+
+    @Value("${vcap.application.space_name:localSpace}")
+    private String spaceName;
+
+
+    @Value("${vcap.application.instance_id:localInstanceId}")
+    private String instanceId;
+
+    @RequestMapping("/")
+    public String index(){
+
+        Metrics.counter("application.indexpage.request").increment();
+
+        return "PCF Info: " + applicationName + "@" + spaceName + " " + instanceId;
+    }
+
+}
+```
+
+Build and redeploy to PCF. Hit the homepage URL and note the PCF information.
+
+This includes Round Robin load balancing when you have multiple instances running.
+
 ## 3 - Operations with Spring Boot
 
 Key points:
@@ -382,6 +413,26 @@ For Maven users, the spring-boot-starter-parent POM includes a pre-configured pl
 </build>
 ```
 
+### 3.8 - BONUS - Add Custom Application Metrics counter to your Hello Controller
+
+```java
+@RequestMapping("hello")
+public String helloWorld(){
+
+    Metrics.counter("application.helloworld.hit").increment();
+
+    return helloMessage;
+}
+```
+
+Restart your app, hit the endpoint .. and access the /actuator/metrics endpoint.
+
+Note the addition of application.helloworld.hit
+
+
+
+
+
 ## 4 - Operations on PCF
 
 Key points:
@@ -492,6 +543,37 @@ Cloud Foundry community members have written plugins to further automate the blu
 Autopilot: Autopilot is a Cloud Foundry Go plugin that provides a subcommand, zero-downtime-push, for hands-off, zero-downtime application deploys.
 BlueGreenDeploy: cf-blue-green-deploy is a plugin, written in Go, for the Cloud Foundry Command Line Interface (cf CLI) that automates a few steps involved in zero-downtime deploys.
 
+
+### 4.6 - BONUS - Enable Custom Application Metrics Forwarding to PCF Metrics
+
+Metric data can be sent to an Metric Platform of your choice including PCF Metrics.
+
+For PCF Metrics this will require setting up a PCF Metrics Forwarder Serivce.
+
+To check if it's available:
+
+```sh
+cf marketplace
+```
+
+Verify that the *metrics-forwarder* service is there.
+
+To create the Service:
+
+```sh
+cf create-service metrics-forwarder unlimited myforwarder
+```
+
+It will need to be bound to your application:
+
+```sh
+cf bind-service pcf-demo myforwarder
+```
+
+Then restart your app:
+```sh
+cf restage pcf-demo
+```
 
 ## 5 - Configuration with Spring Boot
 
