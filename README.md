@@ -43,6 +43,8 @@ Cloud Native Lab - Simple Workshop demonstrating Cloud-Native development with S
 
 Intellij recommended .. The Community addition is free.
 
+Using an non-Java IDE, can cause issues with test formatting as well as lack of "auto imports".
+
 ### Access to a Pivotal Cloud Foundry instance
 
 Access will be provided during the workshop, or you can sign-up for a free access at : https://run.pivotal.io
@@ -375,9 +377,6 @@ public String helloWorld(){
 Restart your app, hit the endpoint .. and access the /actuator/metrics endpoint.
 
 Note the addition of application.helloworld.hit
-
-
-
 
 
 ## 4 - Operations on PCF
