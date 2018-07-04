@@ -51,21 +51,21 @@ Access will be provided during the workshop, or you can sign-up for a free acces
 
 Key points:
 * Spring Boot Initializr
-* Maven vs Gradle
-* Maven Wrapper / Gradle Wrapper
+* Maven
+* Maven Wrapper
 
 ### 0.1 - Generate a Spring Boot Template from https://start.spring.io
 Stick to the default settings, however update:
 - artifact name to cloud-lab
 - for dependencies add *Web*
-- select Gradle or Maven Project
+- select Maven Project
 
 <img src="img/init-screen.png">
 
 Download it, and unzip it.
 
-Note the mvnw or gradlew files:
-These are the Wrapper components for Maven and Gradle: ensuring build script version consistency, removing the dependency of having these build tools installed , and simplifying CI build agent dependencies (only a JDK will be required).
+Note the mvnw file:
+This is the Wrapper components for Maven: ensuring build script version consistency, removing the dependency of having these build tools installed , and simplifying CI build agent dependencies (only a JDK will be required).
 
 ### 0.2 - Import the project into your IDE
 
@@ -96,26 +96,6 @@ public class HelloWorldController {
 
 ### 1.2 - Run the application
 
-With Gradle:
-```sh
-./gradlew bootRun
-```
-
-(on windows machines use : gradlew.bat bootRun)
-
-Or you can build the artifact with:
-
-```sh
-./gradlew build
-```
-
-and then run it directly as a Jar file:
-
-```sh
-java -jar build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
-```
-
-For maven:
 
 ```sh
 ./mvnw spring-boot:run
@@ -134,8 +114,6 @@ java -jar ./target/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
 
 Note Tomcat is embedded inside of the build artifact (you don't need an external application Server).
-
-Also note, the different default output directories for Maven and Gradle.
 
 ### 1.3 - Test the /hello endpoint
 The address will be: localhost:8080/hello
@@ -160,7 +138,7 @@ public class HelloWorldControllerTests {
     public void testHelloWorld(){
         String body = restTemplate.getForObject("/hello",String.class);
 
-        assertThat(body).contains("Hola Mundo!");
+        assertThat(body).contains("Hello world !!");
     }
 }
 ```
@@ -170,7 +148,7 @@ With Intellij, you can now run the Test by right clicking on it.
 From the commandline you can run them with:
 
 ```sh
-./gradlew test
+./mvwn test
 ```
 
 Note: RestTemplate and TestRestTemplate are the conventional ways for invoking / and testing HTTP/Rest calls.
@@ -192,11 +170,6 @@ Enter your Username and Password.
 
 ### 2.2 - Deploy your application to PCF
 
-For Gradle:
-```sh
-cf push cloud-lab -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
-```
-For Maven:
 ```sh
 cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
@@ -276,17 +249,6 @@ The Spring Actuator Dependency adds out-of-the-box endpoints for monitoring and 
 
 The full name of the dependency is : *org.springframework.boot:spring-boot-starter-actuator*
 
-If using Gradle, your new dependency block should look like:
-
-```groovy
-dependencies {
-    //...
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    //...
-}
-```
-
-For Maven:
 
 ```xml
 <dependencies>
@@ -303,11 +265,6 @@ For Maven:
 
 
 Re-run the application
-```sh
-./gradlew bootRun
-```
-
-or with Maven:
 
 ```sh
 ./mvnw spring-boot:run
@@ -338,7 +295,7 @@ Later on in the Workshop this endpoint will also show external dependency status
 This will require running rebuilding the application:
 
 ```sh
-./gradlew bootRun
+./mvnw spring-boot:run
 ```
 
 ```sh
@@ -365,15 +322,7 @@ We want to be able to easily view build information from running instances of ou
 
 You will need to generate a META-INF/build-info.properties in your class path .. this can be automated :
 
-Add the following to your build.gradle:
-
- ```groovy
- springBoot {
-    buildInfo()
- }
- ```
-
-Or for Maven in the pom.xml .. update the build block to the following .. note the addition of the executions block:
+For Maven in the pom.xml .. update the build block to the following .. note the addition of the executions block:
 
 
 ```xml
@@ -397,8 +346,6 @@ Or for Maven in the pom.xml .. update the build block to the following .. note t
 Rebuild, and check the http://localhost:8080/actuator/info endpoint.
 
 ### 3.7 - BONUS - Add GIT Information to the /info endpoint
-
-Hint - you will need to init a GIT repo locally, and add the com.gorylenko.gradle-git-properties dependency in Gradle.
 
 For Maven users, the spring-boot-starter-parent POM includes a pre-configured plugin to generate a git.properties file. To use it, add the following declaration to your POM:
 
@@ -457,10 +404,6 @@ public class KillController {
 ```
 
 Rebuild your app, and redeploy to PCF.
-
-```sh
- ./gradlew build && cf push cloud-lab -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
-```
 
 ```sh
  ./mvnw package && cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar
@@ -677,15 +620,6 @@ Note how the /uppercase endpoint is always slow.
 
 The full name of the dependency is : *org.springframework.boot:spring-boot-starter-cache*
 
-If using Gradle, your new dependency block should look like:
-
-```groovy
-dependencies {
-    //...
-    compile('org.springframework.boot:spring-boot-starter-cache')
-    //...
-}
-```
 
 ### 7.3 - Enable Caching on the endpoint by using the *Cacheable* Annotation.
 
@@ -737,16 +671,9 @@ Key points:
 
 ### 8.1 - Add the Spring Boot Redis and commons-pool dependencies to your build script.
 
-If using Gradle, your new dependency block should look like:
-
-```groovy
-dependencies {
-    //...
-    compile('org.springframework.boot:spring-boot-starter-data-redis')
-    compile('org.apache.commons:commons-pool2')
-    //...
-}
-```
+The dependencies are:
+*org.springframework.boot:spring-boot-starter-data-redis*
+*org.apache.commons:commons-pool2*
 
 Rebuild, and redeploy to PCF.
 
@@ -810,17 +737,6 @@ The full name of the dependencies are :
 *org.springframework.boot:spring-boot-starter-data-rest*
 *com.h2database:h2*
 
-If using Gradle, your new dependency block should look like:
-
-```groovy
-dependencies {
-	//...
-	compile('org.springframework.boot:spring-boot-starter-data-rest')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('com.h2database:h2')
-	//...
-}
-```
 
 ### 9.2 - Add a Simple Domain Object
 
@@ -920,15 +836,6 @@ Key points:
 The full name of the dependency is :
 *mysql:mysql-connector-java*
 
-If using Gradle, your new dependency block should look like:
-
-```groovy
-dependencies {
-    //...
-    compile("mysql:mysql-connector-java")
-    //...
-}
-```
 
 ### 10.2 - Create a MySql Service Instance in PCF
 
@@ -979,16 +886,6 @@ We will use Flyway for performing MySQL migrations.
 
 The full name of the dependency is :
 *org.flywaydb:flyway-core*
-
-If using Gradle, your new dependency block should look like:
-
-```groovy
-dependencies {
-	//...
-	compile("org.flywaydb:flyway-core")
-	//...
-}
-```
 
 ### 11.2 - Add a Base Database Init Script:
 
@@ -1096,9 +993,6 @@ public class ScheduledTasks {
 
 Restart your app.
 
-```sh
-./gradlew bootRun
-```
 
 Note the additional time messages in the output.
 
@@ -1123,15 +1017,6 @@ Key points:
 
 The full name of the dependency is : *org.springframework.boot:spring-boot-starter-amqp*
 
-If using Gradle, your new dependency block should look like:
-
-```groovy
-dependencies {
-    //...
-    compile('org.springframework.boot:spring-boot-starter-amqp')
-    //...
-}
-```
 
 ### 13.2 - Create a Controller for Sending and Receiving Queue Messages
 
