@@ -711,6 +711,8 @@ Confirm connection to your Redis Server using the health endpoint: /actuator/hea
 
 Also confirm that cache is still working.
 
+**TIP -- To get more readable "pretty" JSON output in browser, install a JSON Extension **
+
 ### 8.4 - BONUS - Default to Simple (non-Redis caching locally) and Redis Caching in the cloud
 
 In application.properties add:
