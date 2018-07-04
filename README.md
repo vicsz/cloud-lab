@@ -176,6 +176,12 @@ Enter your Username and Password.
 cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
 
+Note with multiple lab participants, the default *route* generated based on application name will probably NOT be available, to solve this deploy with the random-route parameter.
+
+```sh
+cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar --random-route
+```
+
 This will automatically create a new application in your default PCF development space, with the specific jar artifact deployed.
 
 Note that PCF will automatically detect that this is a Java application, and use the appropriate *BuildPack*.
