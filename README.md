@@ -1113,16 +1113,13 @@ To send message, curl or point your browser to /sendmessage?input=YOUR_MESSAGE_S
 
 To receive messages, curl or point your browser to /getmessage
 
-## 15 - Spring Cloud
 
-**Discussion Item**
+## 15 - BONUS - Advanced Observability
 
-Spring Cloud provides tools for developers to quickly build some of the common patterns in distributed systems (e.g. configuration management, service discovery, circuit breakers, intelligent routing, micro-proxy, control bus, one-time tokens, global locks, leadership election, distributed sessions, cluster state). Coordination of distributed systems leads to boiler plate patterns, and using Spring Cloud developers can quickly stand up services and applications that implement those patterns. They will work well in any distributed environment, including the developer's own laptop, bare metal data centres, and managed platforms such as Cloud Foundry.
+For reference see the Metrics Demo repository at https://github.com/vicsz/spring-boot-metrics-demo.
 
-### 15.1 - Spring Cloud Config
+### 15.1 - Add Alerting on Error Level Log Messages (i.e. Slack)
 
-Centralized external configuration management backed by a git repository. The configuration resources map directly to Spring `Environment` but could be used by non-Spring applications if desired.
+This will involve creating your own custom Slack Webhook, and updating your Logback.xml with a Slack Appender.
 
-### 15.2 - Spring Cloud NetFlix
-
-Integration with various Netflix OSS components (Eureka, Hystrix, Zuul, Archaius, etc.).
+Tip - to avoiding disclosing your Slack Webhook URL, instead of adding it to source control, inject is as an environment variable in PCF.
