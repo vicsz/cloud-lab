@@ -59,12 +59,14 @@ Key points:
 ### 0.1 - Generate a Spring Boot Template from https://start.spring.io
 Stick to the default settings, however update:
 - artifact name to cloud-lab
-- for dependencies add *Web*
+- for dependencies add **Web**
 - select Maven Project
 
 <img src="img/init-screen.png">
 
 Download it, and unzip it.
+
+> NOTE - Make sure that the **Web** Dependency was added -- you should see *spring-boot-starter-web* in your pom.xml
 
 Note the mvnw file:
 This is the Wrapper components for Maven: ensuring build script version consistency, removing the dependency of having these build tools installed , and simplifying CI build agent dependencies (only a JDK will be required).
@@ -98,10 +100,21 @@ public class HelloWorldController {
 
 ### 1.2 - Run the application
 
+> NOTE: Maven instructions are for Bash/Linux/MacOS ... for Windows , replace calls to *./mvnw* with *mvnw.cmd*
 
 ```sh
 ./mvnw spring-boot:run
 ```
+
+On Windows machines:
+
+```sh
+mvnw.cmd spring-boot:run
+```
+
+> NOTE: if you have trouble running Maven Wrapper (mvwn) it is most likely due to Proxy issues,  try regular Maven (not wrapper)
+
+---
 
 To build the artifact:
 
