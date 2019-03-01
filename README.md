@@ -418,6 +418,8 @@ For Maven users, the spring-boot-starter-parent POM includes a pre-configured pl
 </build>
 ```
 
+**Note this requires that you have run a "git init" command on your working directory for this project**
+
 ### 3.8 - BONUS - Add Custom Application Metrics counter to your Hello Controller
 
 ```java
