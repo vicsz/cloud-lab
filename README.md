@@ -180,6 +180,12 @@ From the commandline you can run them with:
 ./mvwn test
 ```
 
+On Windows machines:
+
+```sh
+mvnw.cmd test
+```
+
 Note: RestTemplate and TestRestTemplate are the conventional ways for invoking / and testing HTTP/Rest calls.
 
 
