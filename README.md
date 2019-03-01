@@ -450,7 +450,7 @@ public String helloWorld(){
 
     Metrics.counter("application.helloworld.hit").increment();
 
-    return helloMessage;
+    return "Hello world!!";
 }
 ```
 
