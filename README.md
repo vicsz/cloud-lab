@@ -321,6 +321,28 @@ The full name of the dependency is : *org.springframework.boot:spring-boot-start
 </dependencies>
 ```
 
+Your pom.xml should now contain a section that looks like: 
+
+
+```xml
+<dependencies>
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-web</artifactId>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-actuator</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-test</artifactId>
+		<scope>test</scope>
+	</dependency>
+</dependencies>
+```
 
 Re-run the application
 
