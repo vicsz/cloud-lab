@@ -256,6 +256,12 @@ Via the GUI observe additional instances being spun up.
 ### 2.6 - BONUS - Add a HomePage Controller to display PCF information using VCAP variables
 
 ```java
+
+import io.micrometer.core.instrument.Metrics;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 public class HomePageController {
 
