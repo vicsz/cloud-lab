@@ -697,10 +697,16 @@ curl http://localhost:8080/uppercase?input=test
 
 Note how the /uppercase endpoint is always slow.
 
-### 7.2 - Add the Spring Boot Cache dependency to your build script.
+### 7.2 - Add the Spring Boot Cache dependency to your build script (pom.xml)
 
 The full name of the dependency is : *org.springframework.boot:spring-boot-starter-cache*
 
+```xml
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+```
 
 ### 7.3 - Enable Caching on the endpoint by using the *Cacheable* Annotation.
 
@@ -750,11 +756,22 @@ Key points:
 * Creating a Redis Instance in PCF
 
 
-### 8.1 - Add the Spring Boot Redis and commons-pool dependencies to your build script.
+### 8.1 - Add the Spring Boot Redis and commons-pool dependencies to your build script (pom.xml).
 
 The dependencies are:
 *org.springframework.boot:spring-boot-starter-data-redis*
 *org.apache.commons:commons-pool2*
+
+```xml
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.apache.commons</groupId>
+	<artifactId>commons-pool2</artifactId>
+</dependency>
+```
 
 Rebuild, and redeploy to PCF.
 
