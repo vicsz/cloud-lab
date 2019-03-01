@@ -128,6 +128,12 @@ Run:
 ./mvnw package
 ```
 
+On Windows machines:
+
+```sh
+mvnw.cmd package
+```
+
 ```sh
 java -jar ./target/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
