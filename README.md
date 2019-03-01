@@ -274,7 +274,6 @@ public class HomePageController {
     @Value("${vcap.application.space_name:localSpace}")
     private String spaceName;
 
-
     @Value("${vcap.application.instance_id:localInstanceId}")
     private String instanceId;
 
