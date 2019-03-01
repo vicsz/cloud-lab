@@ -88,6 +88,10 @@ This can be done by creating a *HelloWorldController* Java class file with:
 
 
 ```java
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 public class HelloWorldController {
 
