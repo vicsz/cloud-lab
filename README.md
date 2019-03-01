@@ -194,7 +194,7 @@ On Windows machines:
 mvnw.cmd test
 ```
 
-**Fix the broken test -- hint the strings don't match **
+**Fix the broken test -- hint the strings don't match**
 
 
 Note: RestTemplate and TestRestTemplate are the conventional ways for invoking / and testing HTTP/Rest calls.
