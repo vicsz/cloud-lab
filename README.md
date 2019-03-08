@@ -93,7 +93,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloWorldController {
 
-    @RequestMapping("hello")
     public String helloWorld(){
         return "Hello world";
     }
@@ -140,12 +139,12 @@ java -jar ./target/demo-0.0.1-SNAPSHOT.jar
 
 Note Tomcat is embedded inside of the build artifact (you don't need an external application Server).
 
-### 1.3 - Test the /hello endpoint
-The address will be: localhost:8080/hello
+### 1.3 - Test the root endpoint
+The address will be: localhost:8080
 
 You can test via a browser or commandline:
 ```sh
-curl localhost:8080/hello
+curl localhost:8080
 ```
 
 ### 1.4 - BONUS - Add Unit Tests for HelloWorld endpoint
@@ -171,7 +170,7 @@ public class HelloWorldControllerTests {
 
     @Test
     public void testHelloWorld(){
-        String body = restTemplate.getForObject("/hello",String.class);
+        String body = restTemplate.getForObject("/",String.class);
 
         assertThat(body).contains("Hello world");
     }
@@ -238,7 +237,7 @@ Click through to your app by selecting the default space and org.
 
 Your route to the application (URL) will be presented besides your application.
 
-### 2.4 - Test the /hello endpoint at this route <ROUTE>/hello
+### 2.4 - Test the / endpoint at this route <ROUTE>/
 
 ### 2.5 - Scale the App
 
