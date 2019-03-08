@@ -1,4 +1,4 @@
-package com.example.cloudlab;
+package com.example.demo;
 
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;

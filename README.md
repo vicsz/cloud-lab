@@ -58,9 +58,7 @@ Key points:
 
 ### 0.1 - Generate a Spring Boot Template from https://start.spring.io
 Stick to the default settings, however update:
-- artifact name to cloud-lab
 - for dependencies add **Web**
-- select Maven Project
 
 <img src="img/init-screen.png">
 
@@ -97,7 +95,7 @@ public class HelloWorldController {
 
     @RequestMapping("hello")
     public String helloWorld(){
-        return "Hola Mundo!";
+        return "Hello world";
     }
 }
 ```
@@ -137,7 +135,7 @@ mvnw.cmd package
 To run your built application: 
 
 ```sh
-java -jar ./target/cloud-lab-0.0.1-SNAPSHOT.jar
+java -jar ./target/demo-0.0.1-SNAPSHOT.jar
 ```
 
 Note Tomcat is embedded inside of the build artifact (you don't need an external application Server).
@@ -175,7 +173,7 @@ public class HelloWorldControllerTests {
     public void testHelloWorld(){
         String body = restTemplate.getForObject("/hello",String.class);
 
-        assertThat(body).contains("Hello world !!");
+        assertThat(body).contains("Hello world");
     }
 }
 ```
@@ -217,13 +215,13 @@ Enter your Username and Password.
 ### 2.2 - Deploy your application to PCF
 
 ```sh
-cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar
+cf push cloud-lab -p target/demo-0.0.1-SNAPSHOT.jar
 ```
 
 Note with multiple lab participants, the default *route* generated based on application name will probably NOT be available, to solve this deploy with the random-route parameter.
 
 ```sh
-cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar --random-route
+cf push cloud-lab -p target/demo-0.0.1-SNAPSHOT.jar --random-route
 ```
 
 This will automatically create a new application in your default PCF development space, with the specific jar artifact deployed.
@@ -529,7 +527,7 @@ At any time, only one of the environments is live, with the live environment ser
 #### 4.6.1 - BONUS - Deploy a new instance of our cloud-lab
 
 ```sh
-cf push cloud-lab-2 -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
+cf push cloud-lab-2 -p build/libs/demo-0.0.1-SNAPSHOT.jar
 ```
 
 Right now, we have 2 deploys apps running (they can be different version of the application).

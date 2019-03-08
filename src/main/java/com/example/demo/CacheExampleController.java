@@ -1,4 +1,4 @@
-package com.example.cloudlab;
+package com.example.demo;
 
 import io.micrometer.core.instrument.Metrics;
 import org.springframework.cache.annotation.Cacheable;

@@ -1,4 +1,4 @@
-package com.example.cloudlab;
+package com.example.demo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
