@@ -565,11 +565,11 @@ Autopilot: Autopilot is a Cloud Foundry Go plugin that provides a subcommand, ze
 BlueGreenDeploy: cf-blue-green-deploy is a plugin, written in Go, for the Cloud Foundry Command Line Interface (cf CLI) that automates a few steps involved in zero-downtime deploys.
 
 
-### 4.6 - BONUS - Enable Custom Application Metrics Forwarding to PCF Metrics
+### 4.7 - BONUS - Enable Custom Application Metrics Forwarding to PCF Metrics
 
-#### 4.6.a (PCF 2.4 or greater )
+#### 4.7.a (PCF 2.4 or greater )
 
-##### Add the Prometheus Micrometer dependency to your build script
+##### 4.7.a.1 Add the Prometheus Micrometer dependency to your build script
 
 Add the io.micrometer:micrometer-registry-prometheus dependency to your pom.xml:
 
@@ -581,27 +581,27 @@ Maven:
     </dependency>
 ```
 
-##### Ensure Metric Registrar CLI plugin is installed
+##### 4.7.a.2 Ensure Metric Registrar CLI plugin is installed
 
 ```sh
     cf install-plugin -r CF-Community "metric-registrar"
 ```
 
-##### Build and Deploy your Application 
+##### 4.7.a.3 Build and Deploy your Application 
 
-##### Register your Metrics endpoint with PCF
+##### 4.7.a.4 Register your Metrics endpoint with PCF
 
 ```sh
     cf register-metrics-endpoint cloud-lab /actuator/prometheus
 ``` 
 
-#### 4.6.b (PCF 2.3 or earlier )
+#### 4.7.b (PCF 2.3 or earlier )
 
 Create and Bind the Forwarder Service -- 
 
 This is required for Custom Application Metrics.
 
-##### Ensure *Metric Forwarder* service is available in the CF MarketPlace
+##### 4.7.b.1 Ensure *Metric Forwarder* service is available in the CF MarketPlace
 
 ```sh
 cf marketplace
@@ -609,7 +609,7 @@ cf marketplace
 
 Contact your PCF Cloud Ops team if it is not.
 
-##### Create the Service
+##### 4.7.b.2 Create the Service
 
 You can use a *plan* and *name* of your choice.
 
@@ -617,13 +617,13 @@ You can use a *plan* and *name* of your choice.
 cf create-service metrics-forwarder unlimited myforwarder
 ```
 
-##### Bind the Service to your Application
+##### 4.7.b.3 Bind the Service to your Application
 
 ```sh
 cf bind-service cloud-lab myforwarder
 ```
 
-##### Restage your Application
+##### 4.7.b.4 Restage your Application
 
 ```sh
 cf restage metrics-demo
