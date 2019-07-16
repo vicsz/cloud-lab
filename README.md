@@ -567,34 +567,68 @@ BlueGreenDeploy: cf-blue-green-deploy is a plugin, written in Go, for the Cloud 
 
 ### 4.6 - BONUS - Enable Custom Application Metrics Forwarding to PCF Metrics
 
-Metric data can be sent to an Metric Platform of your choice including PCF Metrics.
+#### 4.6.a (PCF 2.4 or greater )
 
-For PCF Metrics this will require setting up a PCF Metrics Forwarder Serivce.
+##### Add the Prometheus Micrometer dependency to your build script
 
-To check if it's available:
+Add the io.micrometer:micrometer-registry-prometheus dependency to your pom.xml:
+
+Maven:
+```xml
+    <dependency>
+        <groupId>io.micrometer</groupId>
+        <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+```
+
+##### Ensure Metric Registrar CLI plugin is installed
+
+```sh
+    cf install-plugin -r CF-Community "metric-registrar"
+```
+
+##### Build and Deploy your Application 
+
+##### Register your Metrics endpoint with PCF
+
+```sh
+    cf register-metrics-endpoint cloud-lab /actuator/prometheus
+``` 
+
+#### 4.6.b (PCF 2.3 or earlier )
+
+Create and Bind the Forwarder Service -- 
+
+This is required for Custom Application Metrics.
+
+##### Ensure *Metric Forwarder* service is available in the CF MarketPlace
 
 ```sh
 cf marketplace
 ```
 
-Verify that the *metrics-forwarder* service is there.
+Contact your PCF Cloud Ops team if it is not.
 
-To create the Service:
+##### Create the Service
+
+You can use a *plan* and *name* of your choice.
 
 ```sh
 cf create-service metrics-forwarder unlimited myforwarder
 ```
 
-It will need to be bound to your application:
+##### Bind the Service to your Application
 
 ```sh
-cf bind-service pcf-demo myforwarder
+cf bind-service cloud-lab myforwarder
 ```
 
-Then restart your app:
+##### Restage your Application
+
 ```sh
-cf restage pcf-demo
+cf restage metrics-demo
 ```
+
 
 ## 5 - Configuration with Spring Boot
 
