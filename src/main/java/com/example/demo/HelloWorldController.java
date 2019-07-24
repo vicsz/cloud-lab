@@ -11,6 +11,7 @@ public class HelloWorldController {
     @Value("${helloworld.message:'Helloworld - default!'}")
     private String helloMessage;
 
+    @RequestMapping("hello")
     public String helloWorld(){
 
         Metrics.counter("application.helloworld.hit").increment();
