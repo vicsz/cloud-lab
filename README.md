@@ -437,7 +437,9 @@ For Maven users, the spring-boot-starter-parent POM includes a pre-configured pl
 </build>
 ```
 
-**Note this requires that you have run a "git init" command on your working directory for this project**
+**For this to work correctly, your project directory needs to be a valid GIT directory **
+
+If it hasn't been initialized already, run: 
 
 ```sh
 git init
